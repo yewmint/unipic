@@ -4,6 +4,6 @@
 #include <vector>
 #include <string>
 
-std::vector<std::string> storage_load_external();
+std::vector<std::string> load_external_paths();
 
 #endif

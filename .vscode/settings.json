@@ -70,7 +70,9 @@
     "xmemory0": "cpp",
     "xstddef": "cpp",
     "xtr1common": "cpp",
-    "xtree": "cpp"
+    "xtree": "cpp",
+    "*.ipp": "cpp",
+    "bitset": "cpp"
   },
   "cmake.configureOnOpen": true
 }
