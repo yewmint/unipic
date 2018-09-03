@@ -35,7 +35,7 @@ int hamming_distance(fingerprint_t fpa, fingerprint_t fpb){
  * @param fpb
  * @return if they are similar
  */
-int isSimilar(fingerprint_t fpa, fingerprint_t fpb){
+int is_similar(fingerprint_t fpa, fingerprint_t fpb){
   return hamming_distance(fpa, fpb) < SIMILAR_THRESHOLD;
 }
 
@@ -75,17 +75,17 @@ SCENARIO("Hamming distance can be calculated", "[fingerprint_t]") {
 
 SCENARIO("Fingerprints can be compared", "[fingerprint_t]") {
   GIVEN("2 fingerprints"){
-    REQUIRE(isSimilar(
+    REQUIRE(is_similar(
       0x0000000000000000ull,
       0x0000000000000001ull
     ) == true);
 
-    REQUIRE(isSimilar(
+    REQUIRE(is_similar(
       0x0000000000000001ull,
       0x8000000000000000ull
     ) == true);
 
-    REQUIRE(isSimilar(
+    REQUIRE(is_similar(
       0xaaaaaaaaaaaaaaaaull,
       0x5555555555555555ull
     ) == false);

@@ -39,6 +39,6 @@ int hamming_distance(fingerprint_t fpa, fingerprint_t fpb);
  * @param fpb
  * @return if they are similar
  */
-int isSimilar(fingerprint_t fpa, fingerprint_t fpb);
+int is_similar(fingerprint_t fpa, fingerprint_t fpb);
 
 #endif
