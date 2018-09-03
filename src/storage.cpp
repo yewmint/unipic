@@ -4,6 +4,7 @@
 #include <regex>
 #include <iostream>
 #include <sstream>
+#include <sqlite3.h>
 #include "fingerprint.hpp"
 
 #define EXTERNAL_PATH "external"
@@ -30,20 +31,23 @@ vector<string> load_external_paths(){
   return imagePaths;
 }
 
+// path id_to_path(int id){
+//   int bucket = (id - 1) / IMAGE_PER_BUCKET;
+//   int index = (id - 1) % IMAGE_PER_BUCKET;
+
+//   char buffer[10];
+//   sprintf(buffer, "%03d", bucket);
+//   path folder = buffer;
+
+//   sprintf(buffer, "%02d", index);
+//   string name = buffer;
+
+//   string ext = path(imagePath).extension().string();
+//   path from = imagePath;
+//   path to = path(STORAGE_PATH) / folder / path(name + ext);
+// }
+
 void external_to_storage(string imagePath, int id){
-  int bucket = (id - 1) / IMAGE_PER_BUCKET;
-  int index = (id - 1) % IMAGE_PER_BUCKET;
-
-  char buffer[256];
-  sprintf(buffer, "%03d", bucket);
-  path folder = buffer;
-
-  sprintf(buffer, "%02d", index);
-  string name = buffer;
-
-  string ext = path(imagePath).extension().string();
-  path from = imagePath;
-  path to = path(STORAGE_PATH) / folder / path(name + ext);
 
   // TODO: rename
   // TODO: extract path generator
@@ -58,6 +62,10 @@ SCENARIO("Storage can load external images", "[storage_load_external]"){
     vector<string> paths = load_external_paths();
     REQUIRE(paths.size() == 1);
   }
+
+  sqlite3 *db;
+  sqlite3_open("b.db", &db);
+  sqlite3_close(db);
 }
 
 #endif
