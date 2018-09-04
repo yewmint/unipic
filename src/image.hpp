@@ -15,6 +15,7 @@
 struct ImageInfo {
   int pixels;
   fingerprint_t fingerprint;
+  std::string path;
 };
 
 /**
@@ -31,7 +32,6 @@ ImageInfo image_info(std::string path);
  * @param paths paths of images
  * @return map of path and info
  */
-std::map<std::string, ImageInfo>
-image_infos_parallel(std::vector<std::string> paths);
+std::vector<ImageInfo> image_infos_parallel(std::vector<std::string> paths);
 
 #endif

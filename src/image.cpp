@@ -66,6 +66,7 @@ ImageInfo image_info(string path){
   }
 
   ImageInfo info;
+  info.path = path;
   info.pixels = image_pixels(img);
   info.fingerprint = image_fingerprint(img);
 
@@ -78,15 +79,15 @@ ImageInfo image_info(string path){
  * @param paths paths of images
  * @return map of path and info
  */
-map<string, ImageInfo> image_infos_parallel(vector<string> paths){
-  map<string, ImageInfo> infos;
+vector<ImageInfo> image_infos_parallel(vector<string> paths){
+  vector<ImageInfo> infos;
   mutex infoMutex;
 
   parallel_for(size_t(0), paths.size(), [&infos, &infoMutex, &paths](int i) {
     string str = paths[i];
     ImageInfo info = image_info(str);
     lock_guard guard(infoMutex);
-    infos[str] = info;
+    infos.push_back(info);
   });
 
   return infos;
@@ -108,8 +109,8 @@ SCENARIO("Image info can be acquired parallelly", "[ImageInfo]"){
   GIVEN("10 8x8 chess board images"){
     vector<string> paths(10, "chess-board.jpg");
     auto infos = image_infos_parallel(paths);
-    REQUIRE(infos.size() == 1);
-    REQUIRE(infos["chess-board.jpg"].fingerprint == 0x55aa55aa55aa55aaull);
+    REQUIRE(infos.size() == 10);
+    REQUIRE(infos[0].fingerprint == 0x55aa55aa55aa55aaull);
   }
 }
 
