@@ -17,7 +17,7 @@ std::vector<std::string> load_external_paths();
  * 
  * @param filePath path to file
  */
-void remove_file(string filePath);
+void remove_file(std::string filePath);
 
 /**
  * move file at given path to another path
@@ -25,6 +25,6 @@ void remove_file(string filePath);
  * @param path of file
  * @param path to place
  */
-void move_file(string from, string to);
+void move_file(std::string from, std::string to);
 
 #endif
