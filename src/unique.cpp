@@ -71,10 +71,16 @@ void unique_merge(
 
     for (int infoIndex = 0; size_t(infoIndex) < infos.size(); ++infoIndex){
       ImageInfo &info = infos[infoIndex];
-      if (should_B_replace_A(info, curInfo)){
-        lock_guard guard(replaceMutex);
-        replaces.push_back({ infoIndex, curInfo });
+      
+      if (is_similar(info.fingerprint, curInfo.fingerprint)){
         foundDuplicate = true;
+
+        if (curInfo.pixels > info.pixels){
+          lock_guard guard(replaceMutex);
+          replaces.push_back({ infoIndex, curInfo });
+          foundDuplicate = true;
+        }
+
         break;
       }
     }
@@ -142,4 +148,3 @@ SCENARIO("unique_merge can get replace pairs"){
 }
 
 #endif
-

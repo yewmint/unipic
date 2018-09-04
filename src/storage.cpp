@@ -148,8 +148,10 @@ string id_to_path(string imagePath, int id){
 
 SCENARIO("Storage can load external images", "[storage_load_external]"){
   GIVEN("external images"){
+    copy_file("chess-board.jpg", "external/00.jpg");
     vector<string> paths = load_external_paths();
     REQUIRE(paths.size() == 1);
+    remove("external/00.jpg");
   }
 }
 

@@ -43,4 +43,9 @@ void insert_info(fingerprint_t fp, int pixels, std::string path);
  */
 void remove_info_by_path(std::string path);
 
+/**
+ * clear entire database
+ */
+void clear_db();
+
 #endif

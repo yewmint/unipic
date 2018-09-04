@@ -203,9 +203,9 @@ SCENARIO("DB can insert, update, delete and load info"){
 
     insert_info(0x0ull, 10, "storage/000/00.jpg");
     update_info_by_path(
-      0xaa55aa55aa55aa55ull, 
-      11, 
-      "storage/000/00.jpg", 
+      0xaa55aa55aa55aa55ull,
+      11,
+      "storage/000/00.jpg",
       "storage/000/00.jpg"
     );
 

@@ -30,8 +30,6 @@ void system_run(){
     const auto & replacing = replacePair.info;
 
     string newPath = get_replace_path(replacing.path, replaced.path);
-    remove_file(replaced.path);
-    move_file(replacing.path, newPath);
 
     update_info_by_path(
       replacing.fingerprint, 
@@ -39,6 +37,9 @@ void system_run(){
       newPath, 
       replaced.path
     );
+    
+    remove_file(replaced.path);
+    move_file(replacing.path, newPath);
   }
 
   // 5. insert new images
@@ -46,7 +47,30 @@ void system_run(){
   for (const auto & newImageInfo : newImageInfos){
     int curId = id++;
     string newPath = id_to_path(newImageInfo.path, curId);
-    move_file(newImageInfo.path, newPath);
     insert_info(newImageInfo.fingerprint, newImageInfo.pixels, newPath);
+    move_file(newImageInfo.path, newPath);
   }
 }
+
+#ifdef GENERATE_UNIT_TEST
+
+#include <catch.hpp>
+#include <boost/filesystem.hpp>
+
+using namespace boost::filesystem;
+
+SCENARIO(
+  "system run can find dulplicates and replace it with higher resolution"
+  ){
+  GIVEN("an empty storage"){
+    clear_db();
+    copy_file("chess-board.jpg", "external/00.jpg");
+    system_run();
+    copy_file("chess-board.jpg", "external/00.jpg");
+    system_run();
+    remove("storage/000/00.jpg");
+    remove("external/00.jpg");
+  }
+}
+
+#endif
