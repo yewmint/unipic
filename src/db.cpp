@@ -110,7 +110,7 @@ vector<ImageInfo> storage_infos(){
  */
 const char *updateSQL = 
 "UPDATE image_storage "
-"SET fingerprint = \"%llu\", pixels = %d "
+"SET fingerprint = \"%llu\", pixels = %d, path = \"%s\" "
 "WHERE path == \"%s\""
 ;
 
@@ -121,11 +121,16 @@ const char *updateSQL =
  * @param pixels
  * @param path path to image
  */
-void update_info_by_path(fingerprint_t fp, int pixels, string path){
+void update_info_by_path(
+  fingerprint_t fp, 
+  int pixels, 
+  string newPath, 
+  string oldPath
+){
   init_db();
 
   char buffer[256];
-  sprintf(buffer, updateSQL, fp, pixels, path.c_str());
+  sprintf(buffer, updateSQL, fp, pixels, newPath.c_str(), oldPath.c_str());
   db_exec(db, buffer, nullptr, nullptr);
 }
 
@@ -197,7 +202,12 @@ SCENARIO("DB can insert, update, delete and load info"){
     clear_db();
 
     insert_info(0x0ull, 10, "storage/000/00.jpg");
-    update_info_by_path(0xaa55aa55aa55aa55ull, 11, "storage/000/00.jpg");
+    update_info_by_path(
+      0xaa55aa55aa55aa55ull, 
+      11, 
+      "storage/000/00.jpg", 
+      "storage/000/00.jpg"
+    );
 
     auto ret = storage_infos();
     REQUIRE(ret.size() == 1);

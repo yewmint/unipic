@@ -6,11 +6,24 @@
 using namespace std;
 using tbb::parallel_for;
 
+/**
+ * check if should ImageInfo b replace ImageInfo a
+ * 
+ * @param ImageInfo a
+ * @param ImageInfo b
+ * @return should replace
+ */
 bool should_B_replace_A(const ImageInfo &a, const ImageInfo &b){
   return is_similar(b.fingerprint, a.fingerprint) &&
     b.pixels > a.pixels;
 }
 
+/**
+ * return unique images within array
+ * 
+ * @param infos image array which may contains duplicates
+ * @return unique images
+ */
 vector<ImageInfo> unique_within(vector<ImageInfo> infos){
   vector<ImageInfo> uniqueInfos;
   
@@ -33,26 +46,44 @@ vector<ImageInfo> unique_within(vector<ImageInfo> infos){
   return uniqueInfos;
 }
 
-vector<ReplacePair> 
-unique_merge(vector<ImageInfo> infos, vector<ImageInfo> others){
-  vector<ReplacePair> replaces;
-  mutex replaceMutex;
+/**
+ * return replace pairs between images in storage and external images
+ * and new image informations
+ * 
+ * @param infos images in storage
+ * @param others external images
+ * @param replaces [out] replace pairs
+ * @param newInfos [out] new informations not similar with existing ones
+ */
+void unique_merge(
+  std::vector<ImageInfo> infos, 
+  std::vector<ImageInfo> others,
+  std::vector<ReplacePair> &replaces,
+  std::vector<ImageInfo> &newInfos
+){
+  mutex replaceMutex, newInfoMutex;
 
   parallel_for(size_t(0), others.size(), 
-  [&replaces, &replaceMutex, &infos, &others](int otherIndex){
+  [&replaces, &replaceMutex, &newInfos, &newInfoMutex, &infos, &others]
+  (int otherIndex){
     ImageInfo &curInfo = others[otherIndex];
+    bool foundDuplicate = false;
 
-    for (int infoIndex = 0; infoIndex < infos.size(); ++infoIndex){
+    for (int infoIndex = 0; size_t(infoIndex) < infos.size(); ++infoIndex){
       ImageInfo &info = infos[infoIndex];
       if (should_B_replace_A(info, curInfo)){
         lock_guard guard(replaceMutex);
-        replaces.push_back({ otherIndex, infoIndex });
+        replaces.push_back({ infoIndex, curInfo });
+        foundDuplicate = true;
         break;
       }
     }
-  });
 
-  return replaces;
+    if (!foundDuplicate){
+      lock_guard guard(newInfoMutex);
+      newInfos.push_back(curInfo);
+    }
+  });
 }
 
 #ifdef GENERATE_UNIT_TEST
@@ -91,13 +122,22 @@ SCENARIO("unique_merge can get replace pairs"){
     b.pixels = 11;
     b.path = "b";
 
+    ImageInfo c;
+    c.fingerprint = 0xaa55aa55aa55aa55ull;
+    c.pixels = 100;
+    c.path = "c";
+
     vector<ImageInfo> infos = { a };
-    vector<ImageInfo> others = { b };
-    auto replaces = unique_merge(infos, others);
+    vector<ImageInfo> others = { b, c };
+    vector<ReplacePair> replaces;
+    vector<ImageInfo> newInfos;
+    unique_merge(infos, others, replaces, newInfos);
 
     REQUIRE(replaces.size() == 1);
-    REQUIRE(replaces[0].fromIndex == 0);
-    REQUIRE(replaces[0].toIndex == 0);
+    REQUIRE(replaces[0].index == 0);
+
+    REQUIRE(newInfos.size() == 1);
+    REQUIRE(newInfos[0].pixels == 100);
   }
 }
 

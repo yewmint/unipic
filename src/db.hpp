@@ -17,9 +17,15 @@ std::vector<ImageInfo> storage_infos();
  * 
  * @param fp fingerprint
  * @param pixels
- * @param path path to image
+ * @param newPath new path to image
+ * @param oldPath old path to image
  */
-void update_info_by_path(fingerprint_t fp, int pixels, std::string path);
+void update_info_by_path(
+  fingerprint_t fp, 
+  int pixels, 
+  std::string newPath, 
+  std::string oldPath
+);
 
 /**
  * insert new information into database
