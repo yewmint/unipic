@@ -27,4 +27,23 @@ void remove_file(std::string filePath);
  */
 void move_file(std::string from, std::string to);
 
+/**
+ * get replace path if replace to with from
+ * concat stem of from-path with extension of to-path
+ * 
+ * @param from
+ * @param to
+ * @return replace path
+ */
+std::string get_replace_path(std::string from, std::string to);
+
+/**
+ * generate storage path from id
+ * 
+ * @param imagePath original path used to extract extension
+ * @param id id of image
+ * @return storage path for image
+ */
+std::string id_to_path(std::string imagePath, int id);
+
 #endif

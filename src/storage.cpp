@@ -41,22 +41,6 @@ vector<string> load_external_paths(){
   return imagePaths;
 }
 
-// path id_to_path(int id){
-//   int bucket = (id - 1) / IMAGE_PER_BUCKET;
-//   int index = (id - 1) % IMAGE_PER_BUCKET;
-
-//   char buffer[10];
-//   sprintf(buffer, "%03d", bucket);
-//   path folder = buffer;
-
-//   sprintf(buffer, "%02d", index);
-//   string name = buffer;
-
-//   string ext = path(imagePath).extension().string();
-//   path from = imagePath;
-//   path to = path(STORAGE_PATH) / folder / path(name + ext);
-// }
-
 /**
  * remove file at given path
  * will preserve file in trashbin folder
@@ -119,6 +103,45 @@ void move_file(string from, string to){
   rename(from, to);
 }
 
+/**
+ * get replace path if replace to with from
+ * concat stem of from-path with extension of to-path
+ * 
+ * @param from
+ * @param to
+ * @return replace path
+ */
+string get_replace_path(string from, string to){
+  int dotPos = to.find_last_of(path::dot);
+  string stem = to.substr(0, dotPos);
+  string newPath = stem + path(from).extension().string();
+  return newPath;
+}
+
+/**
+ * generate storage path from id
+ * 
+ * @param imagePath original path used to extract extension
+ * @param id id of image
+ * @return storage path for image
+ */
+string id_to_path(string imagePath, int id){
+  int bucket = id / IMAGE_PER_BUCKET;
+  int index = id % IMAGE_PER_BUCKET;
+
+  char buffer[10];
+  sprintf(buffer, "%03d", bucket);
+  path folder = buffer;
+
+  sprintf(buffer, "%02d", index);
+  string name = buffer;
+
+  string ext = path(imagePath).extension().string();
+  path to = path(STORAGE_PATH) / folder / path(name + ext);
+
+  return to.string();
+}
+
 #ifdef GENERATE_UNIT_TEST
 
 #include <catch.hpp>
@@ -135,6 +158,20 @@ SCENARIO("Storage can remove and move back image", "[move_file, remove_file]"){
     copy_file("chess-board.jpg", "00.jpg");
     move_file("00.jpg", "storage/000/00.jpg");
     remove_file("storage/000/00.jpg");
+  }
+}
+
+SCENARIO("Storage can get replace path", "[get_replace_path]"){
+  GIVEN("2 path"){
+    auto str = get_replace_path("a/b/c.jpg", "0/0/0.png");
+    REQUIRE(str == "0/0/0.jpg");
+  }
+}
+
+SCENARIO("Storage can get path from id", "[id_to_path]"){
+  GIVEN("2 path"){
+    auto str = id_to_path("kkk.jpg", 0);
+    REQUIRE(str == "storage/000/00.jpg");
   }
 }
 

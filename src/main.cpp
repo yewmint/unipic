@@ -5,8 +5,10 @@
 
 #else
 
+#include "system.hpp"
+
 int main(){
-  
+  system_run();
 }
 
 #endif
