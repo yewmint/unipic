@@ -18,7 +18,7 @@ sqlite3 *db = nullptr;
 const char *createSQL = 
 "CREATE TABLE IF NOT EXISTS image_storage ("
   "pixels INT NOT NULL,"
-  "fingerprint INT UNIQUE NOT NULL,"
+  "fingerprint TEXT UNIQUE NOT NULL,"
   "path TEXT UNIQUE NOT NULL"
 ");"
 ;
@@ -57,7 +57,7 @@ void db_exec(sqlite3 *curDB, const char *sql, sqlite_cb cb, void* ptr){
 void init_db(){
   if (db == nullptr){
     sqlite3_open(DB_NAME, &db);
-    db_exec(db, createSQL, NULL, NULL);
+    db_exec(db, createSQL, nullptr, nullptr);
   }
 }
 
@@ -74,7 +74,10 @@ void close_db(){
 /**
  * sql to get all infos
  */
-const char *getAllSQL = "SELECT pixels, fingerprint, path FROM image_storage";
+const char *getAllSQL = 
+"SELECT pixels, fingerprint, path "
+"FROM image_storage"
+;
 
 /**
  * get all infos in db
@@ -107,7 +110,7 @@ vector<ImageInfo> storage_infos(){
  */
 const char *updateSQL = 
 "UPDATE image_storage "
-"SET fingerprint = %d, pixels = %d "
+"SET fingerprint = \"%llu\", pixels = %d "
 "WHERE path == \"%s\""
 ;
 
@@ -121,9 +124,9 @@ const char *updateSQL =
 void update_info_by_path(fingerprint_t fp, int pixels, string path){
   init_db();
 
-  char buffer[100];
+  char buffer[256];
   sprintf(buffer, updateSQL, fp, pixels, path.c_str());
-  db_exec(db, buffer, NULL, NULL);
+  db_exec(db, buffer, nullptr, nullptr);
 }
 
 /**
@@ -132,7 +135,7 @@ void update_info_by_path(fingerprint_t fp, int pixels, string path){
 const char *insertSQL =
 "INSERT INTO image_storage "
 "(fingerprint, pixels, path) "
-"VALUES (%d, %d, \"%s\")"
+"VALUES (\"%llu\", %d, \"%s\")"
 ;
 
 /**
@@ -145,9 +148,9 @@ const char *insertSQL =
 void insert_info(fingerprint_t fp, int pixels, string path){
   init_db();
 
-  char buffer[100];
+  char buffer[256];
   sprintf(buffer, insertSQL, fp, pixels, path.c_str());
-  db_exec(db, buffer, NULL, NULL);
+  db_exec(db, buffer, nullptr, nullptr);
 }
 
 /**
@@ -166,23 +169,39 @@ const char *deleteSQL =
 void remove_info_by_path(string path){
   init_db();
 
-  char buffer[100];
+  char buffer[256];
   sprintf(buffer, deleteSQL, path.c_str());
-  db_exec(db, buffer, NULL, NULL);
+  db_exec(db, buffer, nullptr, nullptr);
+}
+
+/**
+ * sql to clear db
+ */
+const char *clearSQL = "DROP TABLE image_storage";
+
+/**
+ * clear entire database
+ */
+void clear_db(){
+  init_db();
+  db_exec(db, clearSQL, nullptr, nullptr);
+  close_db();
 }
 
 #ifdef GENERATE_UNIT_TEST
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 SCENARIO("DB can insert, update, delete and load info"){
   GIVEN("an empty db"){
+    clear_db();
+
     insert_info(0x0ull, 10, "storage/000/00.jpg");
-    update_info_by_path(0x1ull, 11, "storage/000/00.jpg");
+    update_info_by_path(0xaa55aa55aa55aa55ull, 11, "storage/000/00.jpg");
 
     auto ret = storage_infos();
     REQUIRE(ret.size() == 1);
-    REQUIRE(ret[0].fingerprint == 0x1ull);
+    REQUIRE(ret[0].fingerprint == 0xaa55aa55aa55aa55ull);
     REQUIRE(ret[0].pixels == 11);
 
     remove_info_by_path("storage/000/00.jpg");

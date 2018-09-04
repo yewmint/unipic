@@ -28,13 +28,13 @@ void update_info_by_path(fingerprint_t fp, int pixels, std::string path);
  * @param pixels
  * @param path path to image
  */
-void insert_info(fingerprint_t fp, int pixels, string path);
+void insert_info(fingerprint_t fp, int pixels, std::string path);
 
 /**
  * remove information from database by path
  *
  * @param path path to image
  */
-void remove_info_by_path(string path);
+void remove_info_by_path(std::string path);
 
 #endif

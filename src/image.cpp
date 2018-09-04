@@ -95,7 +95,7 @@ vector<ImageInfo> image_infos_parallel(vector<string> paths){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 SCENARIO("Image info can be acquired", "[ImageInfo]"){
   GIVEN("A 8x8 chess board image"){

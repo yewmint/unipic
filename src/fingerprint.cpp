@@ -41,7 +41,7 @@ int is_similar(fingerprint_t fpa, fingerprint_t fpb){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 SCENARIO("Get number of ones in binary form of fingerprint", "[fingerprint_t]"){
   GIVEN("some fingerprints"){
