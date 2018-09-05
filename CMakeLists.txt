@@ -17,7 +17,7 @@ set(TBB_ROOT ${PROJECT_SOURCE_DIR}/tbb)
 include(${TBB_ROOT}/cmake/TBBBuild.cmake)
 tbb_build(TBB_ROOT ${TBB_ROOT} CONFIG_DIR TBB_DIR)
 find_package(TBB REQUIRED)
-include_directories(${tbb_root}/include)
+include_directories(${TBB_ROOT}/include)
 
 # import spdlog header-only library
 include_directories(spdlog/include)
