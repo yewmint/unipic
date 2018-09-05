@@ -1,3 +1,9 @@
 [submodule "boost-cmake"]
 	path = boost-cmake
 	url = https://github.com/Orphis/boost-cmake.git
+[submodule "spdlog"]
+	path = spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "tbb"]
+	path = tbb
+	url = https://github.com/01org/tbb.git

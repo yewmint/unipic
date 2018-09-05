@@ -4,5 +4,4 @@ fi
 
 cd build
 cmake ..
-cmake --build . --config Debug
-cmake --build . --target install
+cmake --build . --config Debug --target install

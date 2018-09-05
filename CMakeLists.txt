@@ -5,6 +5,7 @@ project (unipic CXX)
 add_definitions("-Wall -std=c++17")
 file(GLOB SOURCES "src/*.cpp")
 
+# import opencv
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
@@ -12,15 +13,20 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 add_subdirectory(boost-cmake)
 
 # use TBBGet to import TBB
-include(cmake/TBBGet.cmake)
-tbb_get(TBB_ROOT tbb_root CONFIG_DIR TBB_DIR)
+set(TBB_ROOT ${PROJECT_SOURCE_DIR}/tbb)
+include(${TBB_ROOT}/cmake/TBBBuild.cmake)
+tbb_build(TBB_ROOT ${TBB_ROOT} CONFIG_DIR TBB_DIR)
 find_package(TBB REQUIRED)
 include_directories(${tbb_root}/include)
 
+# import spdlog header-only library
+include_directories(spdlog/include)
+
+# import pthread
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-# link sqlite3
+# import sqlite3
 link_directories(/usr/local/lib)
 include_directories(${PROJECT_SOURCE_DIR}/lib)
 
