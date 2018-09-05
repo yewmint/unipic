@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "E:/Library/spdlog/include",
                 "F:/lib/opencv-3.3.0/build/include",
                 "E:/Library/tbb2018_20180618oss/include",
                 "E:/Library/boost_1_68_0"

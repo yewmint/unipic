@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include "logger.hpp"
 
 using namespace std;
 
@@ -47,6 +48,10 @@ void db_exec(sqlite3 *curDB, const char *sql, sqlite_cb cb, void* ptr){
     sqlite3_free(err);
     sqlite3_close(db);
     db = nullptr;
+
+    log_info("ERROR in db with sql: "s + string(sql));
+    log_info("ERROR in db with err: "s + errMsg);
+
     throw runtime_error(errMsg);
   }
 }

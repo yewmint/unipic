@@ -28,17 +28,21 @@ vector<ImageInfo> unique_within(vector<ImageInfo> infos){
   vector<ImageInfo> uniqueInfos;
   
   for (auto &info : infos){
-    bool replaced = false;
+    bool foundDuplicate = false;
 
     for (auto &uniqueInfo : uniqueInfos){
-      if (should_B_replace_A(uniqueInfo, info)){
-        uniqueInfo = info;
-        replaced = true;
+      if (is_similar(info.fingerprint, uniqueInfo.fingerprint)){
+        foundDuplicate = true;
+
+        if (uniqueInfo.pixels < info.pixels){
+          uniqueInfo = info;
+        }
+        
         break;
       }
     }
 
-    if (!replaced) {
+    if (!foundDuplicate) {
       uniqueInfos.push_back(info);
     }
   }

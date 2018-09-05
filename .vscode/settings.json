@@ -94,5 +94,5 @@
     "unordered_set": "cpp",
     "variant": "cpp"
   },
-  "cmake.configureOnOpen": true
+  "C_Cpp.intelliSenseEngine": "Default"
 }

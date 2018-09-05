@@ -4,6 +4,8 @@
 #include "image.hpp"
 #include "unique.hpp"
 #include "db.hpp"
+#include "logger.hpp"
+#include "TickTimer.hpp"
 
 using namespace std;
 
@@ -11,18 +13,76 @@ using namespace std;
  * system start point
  */
 void system_run(){
+  log_info("======== system start ========"s);
+
+  // start timing
+  TickTimer timer;
+
   // 1. get unique external image informations
   auto externalPaths = load_external_paths();
   auto externalInfos = image_infos_parallel(externalPaths);
+
+  log_info(
+    "[step 1] " + 
+    to_string(timer.tick()) + 
+    " ms to load external images"s
+  );
+
   auto externalUniqueInfos = unique_within(externalInfos);
+
+  log_info(
+    "[step 1] " + 
+    to_string(timer.tick()) + 
+    " ms to get unique external images"s
+  );
+
+  log_info(
+    "[step 1] "s +
+    to_string(externalPaths.size()) + 
+    " external paths"s
+  );
+  log_info(
+    "[step 1] "s +
+    to_string(externalUniqueInfos.size()) + 
+    " unique external paths"s
+  );
 
   // 2. get storage image informations
   auto storageInfos = storage_infos();
+
+  log_info(
+    "[step 2] "s +
+    to_string(storageInfos.size()) + 
+    " storage paths"s
+  );
+  
+  log_info(
+    "[step 2] "s + 
+    to_string(timer.tick()) + 
+    " ms to load storage informations"s
+  );
 
   // 3. get image-replace pairs and new image informations
   vector<ReplacePair> replacePairs;
   vector<ImageInfo> newImageInfos;
   unique_merge(storageInfos, externalUniqueInfos, replacePairs, newImageInfos);
+
+  log_info(
+    "[step 3] "s +
+    to_string(replacePairs.size()) + 
+    " replace pairs"s
+  );
+  log_info(
+    "[step 3] "s +
+    to_string(newImageInfos.size()) + 
+    " new images"s
+  );
+  
+  log_info(
+    "[step 3] "s + 
+    to_string(timer.tick()) + 
+    " ms to merge external and storage images"s
+  );
 
   // 4. replace old image with higher resolution image
   for (const auto & replacePair : replacePairs){
@@ -42,6 +102,12 @@ void system_run(){
     move_file(replacing.path, newPath);
   }
 
+  log_info(
+    "[step 4] "s + 
+    to_string(timer.tick()) + 
+    " ms to replace images"s
+  );
+
   // 5. insert new images
   int id = storageInfos.size();
   for (const auto & newImageInfo : newImageInfos){
@@ -50,6 +116,14 @@ void system_run(){
     insert_info(newImageInfo.fingerprint, newImageInfo.pixels, newPath);
     move_file(newImageInfo.path, newPath);
   }
+  
+  log_info(
+    "[step 5] "s + 
+    to_string(timer.tick()) + 
+    " ms to move new images"s
+  );
+
+  log_info("======== system end ========"s);
 }
 
 #ifdef GENERATE_UNIT_TEST

@@ -1,7 +1,7 @@
-if [ ! -d "build" ]; then
-  mkdir build
+if [ ! -d "debug" ]; then
+  mkdir debug
 fi
 
-cd build
-cmake ..
+cd debug
+cmake -DCMAKE_BUILD_TYPE=Debug -DGENERATE_UNIT_TEST=On ..
 cmake --build . --config Debug --target install -- -j 4
