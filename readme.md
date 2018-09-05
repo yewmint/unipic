@@ -2,7 +2,7 @@
 
 Unipic enables you to get rid of thumbnails or watermarks.
 
-[[Pre-built binaries]()]
+[[Pre-built binaries](https://github.com/yewmint/unipic/releases)]
 
 ## How it works
 
@@ -22,7 +22,7 @@ git submodule update
 
 # run dist build script
 bash ./dist.sh
-# or debug build script
+# or debug build script to build binaries and unit tests
 bash ./rebuild.sh
 ````
 
