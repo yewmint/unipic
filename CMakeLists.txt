@@ -26,9 +26,12 @@ include_directories(spdlog/include)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
+# import catch 2
+include_directories(Catch2/single_include)
+
 # import sqlite3
-link_directories(/usr/local/lib)
-include_directories(${PROJECT_SOURCE_DIR}/lib)
+add_library(sliqte3 sqlite3/sqlite3.c)
+include_directories(sqlite3)
 
 # target for normal usage
 add_executable(unipic ${SOURCES})

@@ -195,7 +195,7 @@ void clear_db(){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 SCENARIO("DB can insert, update, delete and load info"){
   GIVEN("an empty db"){

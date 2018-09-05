@@ -94,7 +94,7 @@ void unique_merge(
 
 #ifdef GENERATE_UNIT_TEST
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 SCENARIO("unique_within can get unique items within ImageInfo array"){
   GIVEN("An ImageInfo array"){

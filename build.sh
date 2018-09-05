@@ -1,2 +1,2 @@
 cd build
-cmake --build . --config Debug --target install
+cmake --build . --config Debug --target install -- -j 4

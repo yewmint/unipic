@@ -7,6 +7,6 @@
 [submodule "tbb"]
 	path = tbb
 	url = https://github.com/01org/tbb.git
-[submodule "opencv"]
-	path = opencv
-	url = https://github.com/opencv/opencv.git
+[submodule "Catch2"]
+	path = Catch2
+	url = https://github.com/catchorg/Catch2.git

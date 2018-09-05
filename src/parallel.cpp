@@ -63,7 +63,7 @@ void parallel_for(int length, std::function<void(int)> func){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 TEST_CASE("Function should run in parallel", "[parallel_for]"){
   SECTION("a function"){

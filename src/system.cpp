@@ -54,7 +54,7 @@ void system_run(){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 #include <boost/filesystem.hpp>
 
 using namespace boost::filesystem;

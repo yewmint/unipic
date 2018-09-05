@@ -144,7 +144,7 @@ string id_to_path(string imagePath, int id){
 
 #ifdef GENERATE_UNIT_TEST
 
-#include <catch.hpp>
+#include <catch2/catch.hpp>
 
 SCENARIO("Storage can load external images", "[storage_load_external]"){
   GIVEN("external images"){
