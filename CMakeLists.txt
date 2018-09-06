@@ -1,8 +1,9 @@
 cmake_minimum_required (VERSION 3.4)
-project (unipic CXX)
+project (unipic)
 
 # set(CMAKE_C_COMPILE_OBJECT TRUE)
-add_definitions("-Wall -std=c++17")
+add_definitions("-Wall")
+set(CMAKE_CXX_FLAGS "-std=c++17")
 file(GLOB SOURCES "src/*.cpp")
 
 # import opencv
@@ -30,7 +31,8 @@ find_package(Threads REQUIRED)
 include_directories(Catch2/single_include)
 
 # import sqlite3
-add_library(sliqte3 sqlite3/sqlite3.c)
+add_library(sqlite3 STATIC sqlite3/sqlite3.c)
+target_link_libraries(sqlite3 ${CMAKE_DL_LIBS})
 include_directories(sqlite3)
 
 # target for normal usage
