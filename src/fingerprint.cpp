@@ -36,7 +36,7 @@ int hamming_distance(fingerprint_t fpa, fingerprint_t fpb){
  * @return if they are similar
  */
 int is_similar(fingerprint_t fpa, fingerprint_t fpb){
-  return hamming_distance(fpa, fpb) < SIMILAR_THRESHOLD;
+  return hamming_distance(fpa, fpb) <= SIMILAR_THRESHOLD;
 }
 
 #ifdef GENERATE_UNIT_TEST

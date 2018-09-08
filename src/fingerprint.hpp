@@ -5,7 +5,7 @@
  * 2 fingerprints are considered dissimilar with each other
  * if hamming distance between them exceeds SIMILAR_THRESHOLD
  */
-#define SIMILAR_THRESHOLD 3
+#define SIMILAR_THRESHOLD 2
 
 /**
  * 64 bits integer
